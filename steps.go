@@ -12,8 +12,8 @@ var (
 	addition       = flag.Bool("a", false, "Perform addition")
 	multiplication = flag.Bool("m", false, "Perform multiplication")
 	power          = flag.Bool("p", false, "Perform exponentiation")
-	startStr       = flag.String("s", "0", "Start value")
-	endStr         = flag.String("e", "0", "End value")
+	startStr       = flag.String("s", "1", "Start value")
+	endStr         = flag.String("e", "100", "End value")
 	hash           = flag.Bool("h", false, "Calculate SHA256 hash")
 	base64hash     = flag.Bool("b", false, "Calculate base64 encoded SHA256 binary hash")
 	showDigits     = flag.Bool("d", false, "Show number of digits")
@@ -40,6 +40,16 @@ func main() {
 		return
 	}
 
+	// Use a reasonable maximum for the end value
+	maxEndVal := new(big.Int).Exp(big.NewInt(10), big.NewInt(100), nil)
+
+	// Set the end value to the maximum if it exceeds the maximum
+	if endVal.Cmp(maxEndVal) > 0 {
+		endVal.Set(maxEndVal)
+		fmt.Printf("Warning: End value exceeds maximum allowed. Setting end value to %s.\n", maxEndVal.String())
+	}
+
+	// Calculate from start value to end value
 	for i := new(big.Int).Set(startVal); i.Cmp(endVal) <= 0; i.Add(i, big.NewInt(1)) {
 		var result big.Int
 		switch {
@@ -50,8 +60,8 @@ func main() {
 			result.Mul(i, i)
 			fmt.Printf("%s * %s = ", i, i)
 		case *power:
-			result.Exp(i, startVal, nil)
-			fmt.Printf("%s^%s = ", i, startVal)
+			result.Exp(i, i, nil)
+			fmt.Printf("%s^%s = ", i, i)
 		}
 
 		resultStr := result.String()
@@ -75,3 +85,4 @@ func main() {
 		fmt.Println()
 	}
 }
+
