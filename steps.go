@@ -12,30 +12,54 @@ var (
 	addition       = flag.Bool("a", false, "Perform addition")
 	multiplication = flag.Bool("m", false, "Perform multiplication")
 	power          = flag.Bool("p", false, "Perform exponentiation")
-	start          = flag.Int("s", 0, "Start value")
-	end            = flag.Int("e", 0, "End value")
+	startStr       = flag.String("s", "0", "Start value")
+	endStr         = flag.String("e", "0", "End value")
 	hash           = flag.Bool("h", false, "Calculate SHA256 hash")
 	base64hash     = flag.Bool("b", false, "Calculate base64 encoded SHA256 binary hash")
+	showDigits     = flag.Bool("d", false, "Show number of digits")
 )
 
 func main() {
 	flag.Parse()
 
-	for i := *start; i <= *end; i++ {
+	startVal, ok := new(big.Int).SetString(*startStr, 10)
+	if !ok {
+		fmt.Println("Error: Invalid start value.")
+		return
+	}
+
+	endVal, ok := new(big.Int).SetString(*endStr, 10)
+	if !ok {
+		fmt.Println("Error: Invalid end value.")
+		return
+	}
+
+	// Check if start value is greater than end value
+	if startVal.Cmp(endVal) > 0 {
+		fmt.Println("Error: Start value cannot be greater than end value.")
+		return
+	}
+
+	for i := new(big.Int).Set(startVal); i.Cmp(endVal) <= 0; i.Add(i, big.NewInt(1)) {
 		var result big.Int
 		switch {
 		case *addition:
-			result.Add(big.NewInt(int64(i)), big.NewInt(int64(i)))
-			fmt.Printf("%d + %d = ", i, i)
+			result.Add(i, i)
+			fmt.Printf("%s + %s = ", i, i)
 		case *multiplication:
-			result.Mul(big.NewInt(int64(i)), big.NewInt(int64(i)))
-			fmt.Printf("%d * %d = ", i, i)
+			result.Mul(i, i)
+			fmt.Printf("%s * %s = ", i, i)
 		case *power:
-			result.Exp(big.NewInt(int64(i)), big.NewInt(int64(i)), nil)
-			fmt.Printf("%d^%d = ", i, i)
+			result.Exp(i, startVal, nil)
+			fmt.Printf("%s^%s = ", i, startVal)
 		}
 
-		fmt.Printf("%s", &result)
+		resultStr := result.String()
+		fmt.Printf("%s", resultStr)
+
+		if *showDigits {
+			fmt.Printf(" (%d digits)", len(resultStr))
+		}
 
 		if *hash || *base64hash {
 			h := sha256.New()
@@ -51,4 +75,3 @@ func main() {
 		fmt.Println()
 	}
 }
-
