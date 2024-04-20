@@ -17,6 +17,7 @@ var (
 	hash           = flag.Bool("h", false, "Calculate SHA256 hash")
 	base64hash     = flag.Bool("b", false, "Calculate base64 encoded SHA256 binary hash")
 	showDigits     = flag.Bool("d", false, "Show number of digits")
+	onlyResult     = flag.Bool("r", false, "Show only the result")
 )
 
 func main() {
@@ -55,20 +56,32 @@ func main() {
 		switch {
 		case *addition:
 			result.Add(i, i)
-			fmt.Printf("%s + %s = ", i, i)
 		case *multiplication:
 			result.Mul(i, i)
-			fmt.Printf("%s * %s = ", i, i)
 		case *power:
 			result.Exp(i, i, nil)
-			fmt.Printf("%s^%s = ", i, i)
 		}
 
-		resultStr := result.String()
-		fmt.Printf("%s", resultStr)
+		if *onlyResult {
+			fmt.Println(result.String())
+			continue
+		}
+
+		fmt.Printf("%s", i)
+
+		switch {
+		case *addition:
+			fmt.Print(" + ")
+		case *multiplication:
+			fmt.Print(" * ")
+		case *power:
+			fmt.Print("^")
+		}
+
+		fmt.Printf("%s = %s", i, result.String())
 
 		if *showDigits {
-			fmt.Printf(" (%d digits)", len(resultStr))
+			fmt.Printf(" (%d digits)", len(result.String()))
 		}
 
 		if *hash || *base64hash {
