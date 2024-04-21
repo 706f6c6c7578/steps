@@ -4,13 +4,14 @@ import (
     "flag"
     "fmt"
     "math/big"
-    "os"
 )
 
 var (
     addition       = flag.Bool("a", false, "Perform addition")
     multiplication = flag.Bool("m", false, "Perform multiplication")
     power          = flag.Bool("p", false, "Perform exponentiation")
+    factorial      = flag.Bool("f", false, "Calculate factorial")
+    fibonacci      = flag.Bool("F", false, "Calculate fibonacci sequence")
     startStr       = flag.String("s", "1", "Start value")
     endStr         = flag.String("e", "100", "End value")
     hexResult      = flag.Bool("h", false, "Show hexadecimal result")
@@ -20,13 +21,6 @@ var (
 
 func main() {
     flag.Parse()
-
-    if flag.NFlag() == 0 {
-        fmt.Println("Usage: go run main.go [flags]")
-        fmt.Println("Flags:")
-        flag.PrintDefaults()
-        os.Exit(1)
-    }
 
     startVal, ok := new(big.Int).SetString(*startStr, 10)
     if !ok {
@@ -65,6 +59,10 @@ func main() {
             result.Mul(i, i)
         case *power:
             result.Exp(i, i, nil)
+        case *factorial:
+            result.MulRange(1, int64(i.Int64()))
+        case *fibonacci:
+            result.Set(fib(i.Int64()))
         }
 
         if *onlyResult && *hexResult {
@@ -88,6 +86,10 @@ func main() {
                 fmt.Print(" * ")
             case *power:
                 fmt.Print("^")
+            case *factorial:
+                fmt.Print("!")
+            case *fibonacci:
+                fmt.Print(" Fibonacci")
             }
 
             fmt.Printf("%s = %s", i, hexResult)
@@ -104,6 +106,10 @@ func main() {
                 fmt.Print(" * ")
             case *power:
                 fmt.Print("^")
+            case *factorial:
+                fmt.Print("!")
+            case *fibonacci:
+                fmt.Print(" Fibonacci")
             }
 
             fmt.Printf("%s = %s", i, result.String())
@@ -115,5 +121,13 @@ func main() {
 
         fmt.Println()
     }
+}
+
+func fib(n int64) *big.Int {
+    fibNumbers := [2]*big.Int{big.NewInt(0), big.NewInt(1)}
+    for i := int64(0); i < n; i++ {
+        fibNumbers[i%2] = new(big.Int).Add(fibNumbers[0], fibNumbers[1])
+    }
+    return fibNumbers[n%2]
 }
 
