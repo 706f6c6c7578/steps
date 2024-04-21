@@ -1,8 +1,6 @@
 package main
 
 import (
-    "crypto/sha256"
-    "encoding/base64"
     "flag"
     "fmt"
     "math/big"
@@ -14,10 +12,9 @@ var (
     power          = flag.Bool("p", false, "Perform exponentiation")
     startStr       = flag.String("s", "1", "Start value")
     endStr         = flag.String("e", "100", "End value")
-    hash           = flag.Bool("h", false, "Calculate SHA256 hash")
-    base64hash     = flag.Bool("b", false, "Calculate base64 encoded SHA256 binary hash")
-    showDigits     = flag.Bool("d", false, "Show number of digits")
+    hexResult      = flag.Bool("h", false, "Show hexadecimal result")
     onlyResult     = flag.Bool("r", false, "Show only the result")
+    valueChars     = flag.Bool("v", false, "Show amount of characters in decimal and hexadecimal")
 )
 
 func main() {
@@ -62,40 +59,53 @@ func main() {
             result.Exp(i, i, nil)
         }
 
+        if *onlyResult && *hexResult {
+            fmt.Printf("%X\n", &result)
+            continue
+        }
+
         if *onlyResult {
             fmt.Println(result.String())
             continue
         }
 
-        fmt.Printf("%s", i)
+        if *hexResult {
+            hexResult := fmt.Sprintf("%X", &result)
+            fmt.Printf("%s", i)
 
-        switch {
-        case *addition:
-            fmt.Print(" + ")
-        case *multiplication:
-            fmt.Print(" * ")
-        case *power:
-            fmt.Print("^")
-        }
-
-        fmt.Printf("%s = %s", i, result.String())
-
-        if *showDigits {
-            fmt.Printf(" (%d digits)", len(result.String()))
-        }
-
-        if *hash || *base64hash {
-            h := sha256.New()
-            resultStr := result.String()
-            h.Write([]byte(resultStr))
-            if *hash {
-                fmt.Printf(" SHA256: %x", h.Sum(nil))
+            switch {
+            case *addition:
+                fmt.Print(" + ")
+            case *multiplication:
+                fmt.Print(" * ")
+            case *power:
+                fmt.Print("^")
             }
-            if *base64hash {
-                fmt.Printf(" Base64 (binary SHA256): %s", base64.StdEncoding.EncodeToString(h.Sum(nil)))
+
+            fmt.Printf("%s = %s", i, hexResult)
+            if *valueChars {
+                fmt.Printf(" (%d characters)", len(hexResult))
+            }
+        } else {
+            fmt.Printf("%s", i)
+
+            switch {
+            case *addition:
+                fmt.Print(" + ")
+            case *multiplication:
+                fmt.Print(" * ")
+            case *power:
+                fmt.Print("^")
+            }
+
+            fmt.Printf("%s = %s", i, result.String())
+
+            if *valueChars {
+                fmt.Printf(" (%d digits)", len(result.String()))
             }
         }
 
         fmt.Println()
     }
 }
+
