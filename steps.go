@@ -42,7 +42,7 @@ func main() {
     }
 
     // Use a reasonable maximum for the end value
-    maxEndVal := new(big.Int).Exp(big.NewInt(10), big.NewInt(100), nil)
+    maxEndVal := new(big.Int).Exp(big.NewInt(10), big.NewInt(1000), nil)
 
     // Set the end value to the maximum if it exceeds the maximum
     if endVal.Cmp(maxEndVal) > 0 {
