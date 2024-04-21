@@ -4,6 +4,7 @@ import (
     "flag"
     "fmt"
     "math/big"
+    "os"
 )
 
 var (
@@ -19,6 +20,13 @@ var (
 
 func main() {
     flag.Parse()
+
+    if flag.NFlag() == 0 {
+        fmt.Println("Usage: go run main.go [flags]")
+        fmt.Println("Flags:")
+        flag.PrintDefaults()
+        os.Exit(1)
+    }
 
     startVal, ok := new(big.Int).SetString(*startStr, 10)
     if !ok {
