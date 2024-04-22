@@ -1,4 +1,20 @@
-﻿$ go run steps.go -a -s 1 -e 10
+$ steps
+Usage: steps [flags]
+Flags:
+  -F    Calculate fibonacci sequence
+  -a    Perform addition
+  -e string
+        End value (default "100")
+  -f    Calculate factorial
+  -h    Show hexadecimal result
+  -m    Perform multiplication
+  -p    Perform exponentiation
+  -r    Show only the result
+  -s string
+        Start value (default "1")
+  -v    Show amount of characters in decimal and hexadecimal
+
+$ go run steps.go -a -s 1 -e 10
 1 + 1 = 2
 2 + 2 = 4
 3 + 3 = 6
