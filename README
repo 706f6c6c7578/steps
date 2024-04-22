@@ -35,25 +35,25 @@ $ go run steps.go -p -s 1 -e 10
 10^10 = 10000000000
 
 $ go run steps.go -f -s 1 -e 10
-1!1 = 1
-2!2 = 2
-3!3 = 6
-4!4 = 24
-5!5 = 120
-6!6 = 720
-7!7 = 5040
-8!8 = 40320
-9!9 = 362880
-10!10 = 3628800
+1! = 1
+2! = 2
+3! = 6
+4! = 24
+5! = 120
+6! = 720
+7! = 5040
+8! = 40320
+9! = 362880
+10! = 3628800
 
 $ go run steps.go -F -s 1 -e 10
-1 Fibonacci1 = 1
-2 Fibonacci2 = 1
-3 Fibonacci3 = 2
-4 Fibonacci4 = 3
-5 Fibonacci5 = 5
-6 Fibonacci6 = 8
-7 Fibonacci7 = 13
-8 Fibonacci8 = 21
-9 Fibonacci9 = 34
-10 Fibonacci10 = 55
+F1 = 1
+F2 = 1
+F3 = 2
+F4 = 3
+F5 = 5
+F6 = 8
+F7 = 13
+F8 = 21
+F9 = 34
+F10 = 55
