@@ -3,15 +3,13 @@ Usage: steps [flags]
 Flags:
   -F    Calculate fibonacci sequence
   -a    Perform addition
-  -e string
-        End value
+  -e string (End value)
   -f    Calculate factorial
   -h    Show hexadecimal result
   -m    Perform multiplication
   -p    Perform exponentiation
   -r    Show only the result
-  -s string
-        Start value
+  -s string (Start value)
   -v    Show amount of characters in decimal and hexadecimal
 
 $ go run steps.go -a -s 1 -e 10
